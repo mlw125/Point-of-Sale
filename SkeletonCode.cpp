@@ -17,10 +17,11 @@ class Register
 {
       private:
       public:
-             int getMenuItem();
-             bool openOrders();
-             void closeOrder();
-             void getOrder();    
+            int getMenuItem();
+            bool openOrders();
+            void closeOrder();
+            void getOrder();
+	    double getChange();
 }
 
 // maybe abstract
@@ -35,7 +36,11 @@ class Logging
 class Menu
 {
       private:
-      public:             
+	      string menuList[];
+      public:
+ 	void addMenuItems();
+	void showMenuItems();
+	void removeMenuItems();	
 }
 
 // abstract
