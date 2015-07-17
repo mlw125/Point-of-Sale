@@ -2,6 +2,8 @@
 #include <string>
 using namepace std;
 
+// where the employee will log in
+// the employee's username will be used for logging.
 class Login
 {
       private:
@@ -13,6 +15,8 @@ class Login
         bool loggedIn();             
 }
 
+// the main part of the program, from here the employee will input the customer's menu choices.
+// the employee can then get the get the math from 
 class Register
 {
       private:
@@ -24,7 +28,7 @@ class Register
 	    double getChange();
 }
 
-// maybe abstract
+// either use a database or store as text document
 class Logging
 {
       private:
