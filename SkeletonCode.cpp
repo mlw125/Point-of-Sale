@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-using namepace std;
+using namespace std;
 
 // where the employee will log in
 // the employee's username will be used for logging.
@@ -13,7 +13,7 @@ class Login
         void setEmplyee();
         void setPassword();
         bool loggedIn();             
-}
+};
 
 // the main part of the program, from here the employee will input the customer's menu choices.
 // the employee can then get the get the math from 
@@ -26,7 +26,7 @@ class Register
             void closeOrder();
             void getOrder();
 	    double getChange();
-}
+};
 
 // either use a database or store as text document
 class Logging
@@ -35,7 +35,7 @@ class Logging
       public:
              void addTransaction();
              void viewTransactions();
-}
+};
 
 class Menu
 {
@@ -45,25 +45,25 @@ class Menu
  	void addMenuItems();
 	void showMenuItems();
 	void removeMenuItems();	
-}
+};
 
 // abstract
 class Error
 {
-}
+};
 
 class Tags
 {
-}
+};
 
 class User
 {
-}
+};
 
 class Employee : public User
 {
-}
+};
 
 class Manager : public User
 {
-}
+};

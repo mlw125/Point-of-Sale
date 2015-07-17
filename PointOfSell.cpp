@@ -1,5 +1,5 @@
 // Matthew Williams 7/16/2015
-
+// David Bumgarner  Modified and expanded 7/17/15
 #include "PointOfSell.h"
 #include <iostream>
 #include <string>
