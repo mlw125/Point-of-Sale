@@ -1,4 +1,4 @@
-// Matthew Williams 7/16/2015
+// Matthew Williams 7/16/2015, modified 7/19/2015
 
 /*
 This is what I have so far. I have tried to explain why I did what I did. Feel free to make changes and suggest new things.
@@ -18,15 +18,17 @@ class Login
       private:
               string userName;
               string password;
+			  vector<string> nameList;
+			  vector<string> passwordList;
       public:
 		Login();
         string getEmployee();
         string getPassword();
         void setEmployee(string);
-        void setPassword(string);   
+        void setPassword(string);
 }; // end Login
 
-// Not sure how to implement the User class and it's children yet
+// Not sure how to implement the User class and it's children yet if anyone could do so that would be great.
 class User
 {
 }; // end User
@@ -44,11 +46,15 @@ class Manager : public User
 class Register
 {
 	private:
+		double total;
+		vector<int> currentOrder;
+		double itemPrice(int);
 	public:
-		int getMenuItem();
-		bool openOrders();
+		void addToOrder(int);
+		void removeFromOrder();
 		void closeOrder();
 		void getOrder();
+		double getTotal();
 }; // end Register
 
 
@@ -72,11 +78,14 @@ class Menu
 		// This way we do not have to worry about arrays.
 		vector<string> menuItem;
 		vector<double> menuPrice;
-		vector<string> menuNumber;
+		vector<int> menuNumber;
+		int numItems;
 	public:
+		Menu();
 		void addMenuItems();
 		void showMenuItems();
 		void removeMenuItems();
+		double searchPrice(int);
 }; // end Menu
 
 #endif
