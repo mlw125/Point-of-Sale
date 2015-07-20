@@ -12,7 +12,7 @@ void MainMenu(Login);
 Login LoginMenu(Login &);
 void RegisterMenu(Login, Menu);
 void Transactions(Login, Menu &);
-void FoodMenu(Login, Menu);
+void FoodMenu(Login, Menu &);
 
 int main()
 {
@@ -68,7 +68,7 @@ void MainMenu(Login employee)
 		else if (choice == 2) // can modify the menu, maybe require manager access
 		{
 			// not completed
-			//FoodMenu(employee, currentMenu);
+			FoodMenu(employee, currentMenu);
 		} // end else if
 		else if (choice == 3) // view the transactions on file
 		{
@@ -77,7 +77,7 @@ void MainMenu(Login employee)
 		} // end else if
 		else if (choice == 4) // sign out
 		{
-			cout << "Logging Out";
+			cout << "\nLogging Out\n";
 		} // end else if
 		else // general catch
 		{
@@ -138,7 +138,57 @@ void RegisterMenu(Login employee, Menu currentMenu)
 // The FoodMenu will handle everything to do with the modifying the menu
 void FoodMenu(Login employee, Menu & currentMenu)
 {
+	int choice = 0;
 
+	while (choice != 3)
+	{
+		currentMenu.sortMenu();
+		currentMenu.showMenuItems();
+		cout << "\nWhat would you like to do?\n";
+		cout << "1. Add to the Menu \n2. Remove from the Menu \n3. Go Back\n";
+		cin >> choice;
+
+		if (choice == 1)
+		{
+			int menuNum = 0;
+			cout << "\nNumber in Menu:\n";
+			cin >> menuNum;
+
+			string menuName = "";
+			cout << "\nName of item:\n";
+			cin >> menuName;
+
+			double menuPrice = 0.0;
+			cout << "\nPrice of item:\n";
+			cin >> menuPrice;
+
+			bool addSuccess = currentMenu.addMenuItems(menuNum, menuName, menuPrice);
+			if (addSuccess)
+				cout << "\nItem added successfully.\n"; // end if
+			else
+				cout << "\nItem not added, try again.\n"; // end else
+		} // end if
+		else if (choice == 2)
+		{
+			int menuNum = 0;
+			cout << "\nEnter the Menu Number of the item you wish to delete: \n";
+			cin >> menuNum;
+
+			bool removeSuccess = currentMenu.removeMenuItems(menuNum);
+			if (removeSuccess)
+				cout << "\nItem removed successfully.\n";
+			else
+				cout << "\nItem not removed, try again.\n";
+		} // end else if
+		else if (choice == 3)
+		{
+			
+		} // end else if
+		else
+		{
+
+		} // end else
+	} // end while
 } // end FoodMenu
 
 // Transactions will handle the viewing of transactions and maybe other related things.

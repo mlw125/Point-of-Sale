@@ -10,18 +10,18 @@ using namespace std;
 // Login Functions
 Login::Login()
 {
+	// I don't think this does anything currently
 	fstream loginFile;
-	string fileData;
+	string nameData = "";
+	string passwordData = "";
 	loginFile.open("Logins.txt");
-	//Not currently working
-	/*while (!loginFile.eof())
+
+	while (loginFile >> nameData >> passwordData)
 	{
-		loginFile >> fileData;
-		nameList.push_back(fileData);
-		loginFile >> fileData;
-		passwordList.push_back(fileData);
+		nameList.push_back(nameData);
+		passwordList.push_back(passwordData);
 	}
-	*/loginFile.close();
+	loginFile.close();
 } // end Login Constructor
 
 string Login::getEmployee()
@@ -72,38 +72,116 @@ double Register::getTotal()
 
 // Menu Functions
 Menu::Menu()
-{
-	// will try to something similiar to Login contructor by reading file, assuming someone can get it to work.
+{	
+	// *Not reading*
+	ifstream MenuFile("Menu.txt");
+	//MenuFile.open("Menu.txt");
+
+	int numData = 0;
+	string nameData = "";
+	double priceData = 0.0;
+
+	while (MenuFile >> numData >> nameData >> priceData)
+	{
+		menuNumber.push_back(numData);
+		menuItem.push_back(nameData);
+		menuPrice.push_back(priceData);
+		numItems++;
+	} // end while
+	MenuFile.close();
 } // end Menu contructor
 
-void Menu::addMenuItems()
+bool Menu::addMenuItems(int num, string name, double price)
 {
+	// if the item number is not in the menu then add the new item to each vector
+	if (searchPosition(num) == -1)
+	{
+		menuItem.push_back(name);
+		menuPrice.push_back(price);
+		menuNumber.push_back(num);
+		numItems++;
+		return true;
+	} // end if
+	else
+		return false; // end else
+} // end addMenuItems()
 
-}
-
+// This function searches through the Menu class vectors and will displat them in order.
+// This way we will not have to sort the vectors, but this can be changed. 
 void Menu::showMenuItems()
 {
-	// displays all menu items with format being number, item, then price.
-	// the second loop is to display 3 items on one line to save room.
+	// *Bad logic, not working right*
+	cout << endl;
 	for (int x = 0; x < numItems; x++)
 	{
-		for (int y = 0; y < 3; y++)
-		{
-			cout << endl << menuNumber[x] << ". " << menuItem[x] << " $" << menuPrice[x];
-			x++;
-			cout << " " << menuNumber[x] << ". " << menuItem[x] << " $" << menuPrice[x];
-			x++;
-			cout << " " << menuNumber[x] << ". " << menuItem[x] << " $" << menuPrice[x] << endl;
-		} // end for
+		cout << menuNumber[x] << ". " << menuItem[x] << " $" << menuPrice[x] << endl;
 	} // end for
 } // end showMenuItems()
 
-void Menu::removeMenuItems()
+bool Menu::removeMenuItems(int num)
 {
+	int removePosition = searchPosition(num);
+	// if the item number is not in the menu then add the new item to each vector
+	if (removePosition != -1)
+	{
+		menuItem.erase(menuItem.begin() + removePosition);
+		menuPrice.erase(menuPrice.begin() + removePosition);
+		menuNumber.erase(menuNumber.begin() + removePosition);
+		numItems--;
+		return true;
+	} // end if
+	else
+		return false; // end else
+} // end removeMenuItems()
 
-}
-
+// This function is used when getting totals for an order. Will return the price if that number is in the
+// menu or otherwise return a -1 to signal it was not found.
 double Menu::searchPrice(int menuNum)
 {
-	return 10.00;
+	int getPricePosition = searchPosition(menuNum);
+	if (getPricePosition != -1)
+		return menuPrice[getPricePosition];
+	else
+		return getPricePosition;
 }
+
+// simply returns the size of the Menu vectors
+int Menu::getMenuSize()
+{
+	return menuNumber.size();
+} // end getMenuSize()
+
+int Menu::searchPosition(int num)
+{
+	for (int x = 0; x < numItems; x++)
+	{
+		if (menuNumber[x] == num)
+			return x;
+	} // end for
+	return -1;
+} // end searchPosition()
+
+void Menu::sortMenu()
+{
+	for (int x = 0; x < numItems; x++)
+	{
+		int minIndex = x;
+
+		for (int y = x; y < numItems; y++)
+			if (menuNumber[minIndex] > menuNumber[y])
+				minIndex = y; // end if
+		// end for
+
+		int tempNum = menuNumber[x];
+		menuNumber[x] = menuNumber[minIndex];
+		menuNumber[minIndex] = tempNum;
+
+		string tempItem = menuItem[x];
+		menuItem[x] = menuItem[minIndex];
+		menuItem[minIndex] = tempItem;
+
+		double tempPrice = menuPrice[x];
+		menuPrice[x] = menuPrice[minIndex];
+		menuPrice[minIndex] = tempPrice;
+	} // end for
+} // end sortMenu()

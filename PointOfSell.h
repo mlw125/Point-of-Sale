@@ -76,16 +76,19 @@ class Menu
 	private:
 		// the idea is that each vector will hold information from the menu.
 		// This way we do not have to worry about arrays.
+		vector<int> menuNumber;
 		vector<string> menuItem;
 		vector<double> menuPrice;
-		vector<int> menuNumber;
 		int numItems;
 	public:
 		Menu();
-		void addMenuItems();
+		bool addMenuItems(int, string, double);
 		void showMenuItems();
-		void removeMenuItems();
+		bool removeMenuItems(int);
 		double searchPrice(int);
+		int getMenuSize();
+		int searchPosition(int);
+		void sortMenu();
 }; // end Menu
 
 #endif
