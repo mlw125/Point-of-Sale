@@ -1,0 +1,4 @@
+1 Hamburger 5.99
+2 Fries 2.99
+3 Steak 10.99
+4 Yes 99.99
