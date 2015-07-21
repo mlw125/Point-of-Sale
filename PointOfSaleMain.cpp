@@ -1,4 +1,4 @@
-// Matthew Williams 7/16/2015, modified 7/19/2015
+// Matthew Williams 7/16/2015, modified 7/21/2015
 
 #include "PointOfSale.h"
 #include <iostream>
@@ -52,12 +52,11 @@ Login LoginMenu(Login &employee)
 // Main Menu for system
 void MainMenu(Login employee)
 {
-	Menu currentMenu;
 	int choice = 0;
-	while (choice != 4)
+	while (choice != 5)
 	{
 		cout << "\nWhat would you like to do?\n";
-		cout << "1. Take an Order \n2. Modify the Menu \n3. View Transation Hisotry \n4. Quit\n";
+		cout << "1. Take an Order \n2. Modify the Menu \n3. Close an Open Order \n4. View Transation Hisotry \n5. Quit\n";
 		cin >> choice;
 
 		if (choice == 1) // opening an order to complete
@@ -69,7 +68,11 @@ void MainMenu(Login employee)
 			// not completed
 			FoodMenu(employee);
 		} // end else if
-		else if (choice == 3) // view the transactions on file
+		else if (choice == 3)
+		{
+
+		} // end else if
+		else if (choice == 4) // view the transactions on file
 		{
 			// not completed
 			//Transactions(employee, currentMenu);
@@ -92,41 +95,55 @@ void RegisterMenu(Login employee)
 	Menu currentMenu;
 	int choice = 0;
 
-	// display the menu for employee
-	currentMenu.showMenuItems();
 	while (choice != -1)
 	{
+		// display the curent open order
+		currentTransaction.showOrder();
 		cout << "\nWhat would you like to do?\n";
-		cout << "1. Add Item to Order \n2. Remove Item From Order \n3. View Current Order \n4. Add Discount \n5. Complete Order\n";
+		cout << "1. Add Item to Order \n2. Remove Item From Order \n3. View Menu \n4. Add Discount \n5. Complete Order\n";
 		cin >> choice;
 
 		if (choice == 1) // add a menu item to the order
 		{
 			int menuNum = 0;
-			cout << "\nEnter the number of the Menu item you would like to add.";
+			cout << "\nEnter the number of the Menu item you would like to add: \n";
 			cin >> menuNum;
 
-			currentTransaction.addToOrder(menuNum);
+			int addSuccess = currentMenu.searchPosition(menuNum);
+			if (addSuccess == -1)
+				cout << "\nItem not found try again"; // end if
+			else
+				currentTransaction.addToOrder(menuNum); // end else
 		} // end if
-		else if (choice == 2)
+		else if (choice == 2) // remove an item from the menu
 		{
-			//currentTransactions.removeFromOrder();
+			int menuNum = 0;
+			cout << "\nEnter the number of the Menu item you would like to remove: \n";
+			cin >> menuNum;
+
+			bool removeSuccess = false;
+			removeSuccess = currentTransaction.removeFromOrder(menuNum);
+			if (removeSuccess == false)
+				cout << "\nItem not found try again"; // end if
 		} // end else if
-		else if (choice == 3)
+		else if (choice == 3) // show the menu for the employee
 		{
-			//currentTransaction.getOrder();
+			currentMenu.showMenuItems();
 		} // end else if
-		else if (choice == 4)
+		else if (choice == 4) // will be used for discounts
 		{
 
 		} // end else if
 		else if (choice == 5) // get the total price of the order and give the customer change and then leave to Main Menu
 		{
 			double customerMoney = 0.0;
-			cout << "\nThe amount due: " << currentTransaction.getTotal();
-			cout << "\nAmount given:";
+			cout << "\nThe amount due: $" << currentTransaction.getTotal();
+			cout << "\nAmount given: $";
 			cin >> customerMoney;
-			cout << "Change Due: " << (customerMoney - currentTransaction.getTotal()) << endl;
+
+			double changeDue = (customerMoney - currentTransaction.getTotal());
+			cout << "Change Due: $" << changeDue << endl;
+			currentTransaction.addOpenOrder(changeDue);
 			choice = -1;
 		} // end else if
 		else

@@ -1,4 +1,4 @@
-// Matthew Williams 7/16/2015, modified 7/19/2015
+// Matthew Williams 7/16/2015, modified 7/21/2015
 
 /*
 This is what I have so far. I have tried to explain why I did what I did. Feel free to make changes and suggest new things.
@@ -42,22 +42,29 @@ class Register
 {
 	private:
 		double total;
-		vector<int> currentOrder;
+		vector<int> currentOrderNum;
+		vector<string> currentOrderName;
 		double itemPrice(int);
+		int orderNumber;
+		vector<int> openOrders;
 	public:
+		Register();
+		~Register();
 		void addToOrder(int);
-		void removeFromOrder();
-		void closeOrder();
-		void getOrder();
+		bool removeFromOrder(int);
+		void showOrder();
 		double getTotal();
+		void addOpenOrder(double);
 }; // end Register
 
+// Note: Implement an open order system where an employee will note when the 
+// food has arrived at the table.
 
 // the logging class will handle the storing of the transations.
-// I have left it alone until we decide how to implement it i.e. text vs database.
 class Logging
 {
 	private:
+		Register * order;
 	public:
 		void addTransaction();
 		void viewTransactions();
