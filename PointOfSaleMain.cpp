@@ -10,9 +10,9 @@ void MainMenu(Login);
 // The first part of the program that runs so to get which employee is logged in.
 // should probably put into loop so when logging 
 Login LoginMenu(Login &);
-void RegisterMenu(Login, Menu);
-void Transactions(Login, Menu &);
-void FoodMenu(Login, Menu &);
+void RegisterMenu(Login);
+void Transactions(Login);
+void FoodMenu(Login);
 
 int main()
 {
@@ -53,7 +53,6 @@ Login LoginMenu(Login &employee)
 void MainMenu(Login employee)
 {
 	Menu currentMenu;
-
 	int choice = 0;
 	while (choice != 4)
 	{
@@ -63,12 +62,12 @@ void MainMenu(Login employee)
 
 		if (choice == 1) // opening an order to complete
 		{
-			RegisterMenu(employee, currentMenu);
+			RegisterMenu(employee);
 		} // end if
 		else if (choice == 2) // can modify the menu, maybe require manager access
 		{
 			// not completed
-			FoodMenu(employee, currentMenu);
+			FoodMenu(employee);
 		} // end else if
 		else if (choice == 3) // view the transactions on file
 		{
@@ -87,12 +86,14 @@ void MainMenu(Login employee)
 } // end MainMenu
 
 // The RegisterMenu will handle the orders 
-void RegisterMenu(Login employee, Menu currentMenu)
+void RegisterMenu(Login employee)
 {
 	Register currentTransaction;
+	Menu currentMenu;
 	int choice = 0;
 
 	// display the menu for employee
+	currentMenu.showMenuItems();
 	while (choice != -1)
 	{
 		cout << "\nWhat would you like to do?\n";
@@ -136,13 +137,13 @@ void RegisterMenu(Login employee, Menu currentMenu)
 } // end RegisterMenu()
 
 // The FoodMenu will handle everything to do with the modifying the menu
-void FoodMenu(Login employee, Menu & currentMenu)
+void FoodMenu(Login employee)
 {
+	Menu currentMenu;
 	int choice = 0;
 
 	while (choice != 3)
 	{
-		currentMenu.sortMenu();
 		currentMenu.showMenuItems();
 		cout << "\nWhat would you like to do?\n";
 		cout << "1. Add to the Menu \n2. Remove from the Menu \n3. Go Back\n";
@@ -192,7 +193,8 @@ void FoodMenu(Login employee, Menu & currentMenu)
 } // end FoodMenu
 
 // Transactions will handle the viewing of transactions and maybe other related things.
-void Transactions()
+void Transactions(Login currentUser)
 {
+	Menu currentMenu;
 
 } // end Transactions

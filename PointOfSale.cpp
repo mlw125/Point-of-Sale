@@ -44,9 +44,8 @@ void Login::setPassword(string pass)
 	password = pass;
 } // end setPassword()
 
-// User Functions
-// Manager Functions
 // Employee Prices
+// Manager Functions
 
 // Register Functions
 
@@ -73,9 +72,8 @@ double Register::getTotal()
 // Menu Functions
 Menu::Menu()
 {	
-	// *Not reading*
+	// Now working, need to place this file in ex: PointOfSale\Project1
 	ifstream MenuFile("Menu.txt");
-	//MenuFile.open("Menu.txt");
 
 	int numData = 0;
 	string nameData = "";
@@ -90,6 +88,26 @@ Menu::Menu()
 	} // end while
 	MenuFile.close();
 } // end Menu contructor
+
+Menu::~Menu()
+{
+	ofstream MenuFile("Menu.txt");
+
+	int numData = 0;
+	string nameData = "";
+	double priceData = 0.0;
+
+	for (int x = 0; x < numItems; x++)
+	{
+		numData = menuNumber[x];
+		nameData = menuItem[x];
+		priceData = menuPrice[x];
+
+		MenuFile << numData << " " << nameData << " " << priceData << endl;
+	} // end for
+
+	MenuFile.close();
+}
 
 bool Menu::addMenuItems(int num, string name, double price)
 {
@@ -110,12 +128,15 @@ bool Menu::addMenuItems(int num, string name, double price)
 // This way we will not have to sort the vectors, but this can be changed. 
 void Menu::showMenuItems()
 {
-	// *Bad logic, not working right*
+	sortMenu();
 	cout << endl;
 	for (int x = 0; x < numItems; x++)
 	{
-		cout << menuNumber[x] << ". " << menuItem[x] << " $" << menuPrice[x] << endl;
+		cout << menuNumber[x] << ". " << menuItem[x] << " $" << menuPrice[x] << " ";
+		if ((x % 2) == 0 && x != 0)
+			cout << endl;
 	} // end for
+	cout << endl;
 } // end showMenuItems()
 
 bool Menu::removeMenuItems(int num)

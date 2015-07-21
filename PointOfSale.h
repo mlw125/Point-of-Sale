@@ -28,16 +28,11 @@ class Login
         void setPassword(string);
 }; // end Login
 
-// Not sure how to implement the User class and it's children yet if anyone could do so that would be great.
-class User
-{
-}; // end User
-
-class Employee : public User
+class Employee
 {
 }; // end Employee
 
-class Manager : public User
+class Manager : public Employee
 {
 }; // end Manager
 
@@ -82,6 +77,7 @@ class Menu
 		int numItems;
 	public:
 		Menu();
+		~Menu();
 		bool addMenuItems(int, string, double);
 		void showMenuItems();
 		bool removeMenuItems(int);
