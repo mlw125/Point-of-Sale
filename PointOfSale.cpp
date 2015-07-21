@@ -18,11 +18,12 @@ Login::Login()
 	string passwordData = "";
 	loginFile.open("Logins.txt");
 
+	// read the file and store the data into vectors, one for username and one for passwords
 	while (loginFile >> nameData >> passwordData)
 	{
 		nameList.push_back(nameData);
 		passwordList.push_back(passwordData);
-	}
+	} // end while
 	loginFile.close();
 } // end Login Constructor
 
@@ -52,9 +53,24 @@ void Login::setPassword(string pass)
 // Register Functions
 Register::Register()
 {
+	ifstream MenuFile("Menu.txt");
+
+	// just to read data that is not need
+	string junk1 = "", junk2 = "";
+	// to get the names of menu items
+	string nameData = "";
+
+	// store the data into the name vector
+	while (MenuFile >> junk1 >> nameData >> junk2)
+	{
+		menuName.push_back(nameData);
+	} // end while
+	MenuFile.close();
 
 } // end Register Contructor
 
+
+// may not be needed
 Register::~Register()
 {
 
@@ -70,20 +86,29 @@ double Register::itemPrice(int menuItem)
 // this function cumulates the total cost and adds an item to the order
 void Register::addToOrder(int menuNum)
 {
-		total += itemPrice(menuNum);
-		currentOrderNum.push_back(menuNum);
+	// increment total cost and add the item number to the number vector
+	total += itemPrice(menuNum);
+	currentOrderNum.push_back(menuNum);
+
+	// get the name for the coressponding item number and push that onto the name vector.
+	string name = menuName[menuNum];
+	currentOrderName.push_back(name);
 } // end addToOrder()
 
 // removes an item from the order
 bool Register::removeFromOrder(int menuNum)
 {
+	// loop through the entire vector
 	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
 	{
+		// a temporary variable to hold data and compare it to the item number the user inputted
 		int temp = currentOrderNum[x];
 		if (temp == menuNum)
 		{
+			// if that item number is found then delete it from both vectors and decrement the cost.
 			total -= itemPrice(menuNum);
 			currentOrderNum.erase(currentOrderNum.begin() + x);
+			currentOrderName.erase(currentOrderName.begin() + x);
 			return true;
 		} // end if
 	} // end for
@@ -93,13 +118,14 @@ bool Register::removeFromOrder(int menuNum)
 // simply displays the current order, but just the number.
 void Register::showOrder()
 {
+	// loop through the vectors and display their data in a somewhat legible way
 	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
 	{
 		cout << endl;
-		cout << currentOrderNum[x] << " |";
+		cout << currentOrderNum[x] << " " << currentOrderName[x] << " |";
 		if ((x % 2) == 0 && x != 0)
 			cout << endl;
-	}
+	} // end for
 	cout << "\nCurrent Total: $" << total << endl;
 }
 
@@ -109,12 +135,26 @@ double Register::getTotal()
 	return total;
 } // end getTotal
 
+// adds an open order to the file Orders.txt, these will be closed in another section
+// randomly assigns a number to the order
 void Register::addOpenOrder(double change)
 {
-	//ofstream openOrders("Orders.txt");
+	ofstream openOrder("Orders.txt");
+	srand(time(0));
 
-	//srand((time));
+	// get a random number between 1 - 99 or something
+	int randomOrderNum = rand() % 100;
+	
+	openOrder << "Order Number: " << randomOrderNum << " \n";
+	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
+	{
+		openOrder << currentOrderNum[x] << " " << currentOrderName[x] << "\n";
+	} // end for
+	openOrder << "Total: " << getTotal() << " " << "Change: " << change << "\n";
 
+	openOrder.close();
+
+	cout << "Order Number: " << randomOrderNum << endl;
 }
 
 // Menu Functions
@@ -179,7 +219,7 @@ bool Menu::addMenuItems(int num, string name, double price)
 // displays all the data in the vectors to show the current menu
 void Menu::showMenuItems()
 {
-	sortMenu();
+	sortMenu(); // sorts the data so that it can be displayed correctly
 	cout << endl;
 	for (int x = 0; x < numItems; x++)
 	{
@@ -265,3 +305,9 @@ void Menu::sortMenu()
 		menuPrice[minIndex] = tempPrice;
 	} // end for
 } // end sortMenu()
+
+//Logging Functions
+Logging::Logging()
+{
+
+} // end Logging constructor

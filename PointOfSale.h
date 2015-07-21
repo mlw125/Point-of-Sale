@@ -44,9 +44,8 @@ class Register
 		double total;
 		vector<int> currentOrderNum;
 		vector<string> currentOrderName;
+		vector<string> menuName;
 		double itemPrice(int);
-		int orderNumber;
-		vector<int> openOrders;
 	public:
 		Register();
 		~Register();
@@ -57,15 +56,16 @@ class Register
 		void addOpenOrder(double);
 }; // end Register
 
-// Note: Implement an open order system where an employee will note when the 
-// food has arrived at the table.
-
 // the logging class will handle the storing of the transations.
 class Logging
 {
 	private:
-		Register * order;
+		int orderNumber;
+		vector<string> menuNum;
+		vector<string> menuName;
 	public:
+		Logging();
+		void showOpenOrders();
 		void addTransaction();
 		void viewTransactions();
 }; // end Logging

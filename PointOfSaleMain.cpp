@@ -13,6 +13,7 @@ Login LoginMenu(Login &);
 void RegisterMenu(Login);
 void Transactions(Login);
 void FoodMenu(Login);
+void OpenOrders(Login);
 
 int main()
 {
@@ -70,14 +71,14 @@ void MainMenu(Login employee)
 		} // end else if
 		else if (choice == 3)
 		{
-
+			OpenOrders(employee);
 		} // end else if
 		else if (choice == 4) // view the transactions on file
 		{
 			// not completed
 			//Transactions(employee, currentMenu);
 		} // end else if
-		else if (choice == 4) // sign out
+		else if (choice == 5) // sign out
 		{
 			cout << "\nLogging Out\n";
 		} // end else if
@@ -204,14 +205,43 @@ void FoodMenu(Login employee)
 		} // end else if
 		else
 		{
-
+			cout << "Wrong input, try again\n";
 		} // end else
 	} // end while
 } // end FoodMenu
+
+void OpenOrders(Login employee)
+{
+	Logging logOrder;
+
+	int choice = 0;
+	while (choice != 3)
+	{
+		cout << "\nWhat would you like to do?\n";
+		cout << "1. View Open Orders \n2. Close an Order \n3. Go Back\n";
+
+		if (choice == 1)
+		{
+
+		} // end if
+		else if (choice == 2)
+		{
+
+		} // end else if
+		else if (choice == 3)
+		{
+
+		} // end else if
+		else
+		{
+
+		} // end else
+	} // end while
+} // end OpenOrders()
 
 // Transactions will handle the viewing of transactions and maybe other related things.
 void Transactions(Login currentUser)
 {
 	Menu currentMenu;
 
-} // end Transactions
+} // end Transactions()
