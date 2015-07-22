@@ -1,18 +1,24 @@
-// Matthew Williams 7/16/2015, modified 7/21/2015
+// Matthew Williams 7/16/2015, modified 7/22/2015
 
 #include "PointOfSale.h"
 #include <iostream>
 #include <string>
+#include <windows.h>
 using namespace std;
 
 // For handling the Main Menu of the register
 void MainMenu(Login);
 // The first part of the program that runs so to get which employee is logged in.
 // should probably put into loop so when logging 
-Login LoginMenu(Login &);
+void LoginMenu();
+// the RegisterMenu handles the taking of the orders, the total cost, and the chnage that is due at the end
+// the orders need to be open when leaving this menu.
 void RegisterMenu(Login);
+// not implemented yet
 void Transactions(Login);
+// will handle everything related to modifying them enu
 void FoodMenu(Login);
+// will handle the viewing and closing of any open orders.
 void OpenOrders(Login);
 
 int main()
@@ -20,9 +26,7 @@ int main()
 	// will loop forever since register will likely be just logged out of.
 	while (1 != 2)
 	{
-		Login employee;
-		LoginMenu(employee);
-		MainMenu(employee);
+		LoginMenu();
 		cout << endl;
 	} // end while
     
@@ -30,24 +34,88 @@ int main()
     return 0;
 } // end main
 
-// currently very simple just gets a username and password, no checking of correctness.
-// Maybe add menu to add, remove, and modify users.
-Login LoginMenu(Login &employee)
+// now checks to see if user is on the list, not requirements for username or password.
+// nor is there checking for duplicates yet.
+void LoginMenu()
 {
-  string user = "";
-  string pass = "";
+	int choice = 0;
+	bool correct = false;
+	Login employee;
+
+	// code for hiding the password when user puts it in
+	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+	DWORD mode = 0;
+	GetConsoleMode(hStdin, &mode);
+
+	// loops until correct is true, meaning the user has a correct account username and password.
+	while (correct != true)
+	{
+		cout << "\nWhat would you like to do?\n";
+		cout << "1. Login \n2. Create User\n";\
+		cin >> choice;
+
+		// if the user wants to log in
+		if (choice == 1)
+		{
+			string user = "";
+			string pass = "";
+
+			cout << "\nPlease enter your username: ";
+			cin >> user;
+
+			// turning off echo for the console
+			SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
+
+			cout << "Please enter your password: ";
+			cin >> pass;
+
+			// turning on echo for the console
+			SetConsoleMode(hStdin, mode);
+
+			// see if the employee is on the list
+			if (employee.searchUser(user, pass) == true)
+				correct = true;
+			else
+				cout << "\nEmployee not found, try again\n";
+		} // end if
+		// if the user wants to make a new account
+		else if (choice == 2)
+		{
+			string user = "";
+			string pass = "";
+			char rank = ' ';
+
+			// input isername
+			cout << "\nPlease enter your username: ";
+			cin >> user;
+
+			employee.setEmployee(user);
+
+			// turning off echo for the console
+			SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
+
+			// input password
+			cout << "Please enter your password: ";
+			cin >> pass;
+
+			employee.setPassword(pass);
+
+			// turning on echo for the console
+			SetConsoleMode(hStdin, mode);
+
+			// input rank
+			cout << "Please enter an E for regular employee or a M for Manager: ";
+			cin >> rank;
+
+			employee.setRank(rank);
+		} // end else if
+		else
+		{
+			cout << "\nWrong input, try again.\n";
+		} // end else
+	} // end while
   
-  cout << "Please enter your username: ";
-  cin >> user;
-  
-  employee.setEmployee(user);
-  
-  cout << "Please enter your password: ";
-  cin >> pass;
-  
-  employee.setPassword(pass);
-  
-  return employee;  
+	MainMenu(employee);
 } // end LoginMenu
 
 // Main Menu for system

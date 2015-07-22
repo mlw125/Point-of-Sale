@@ -1,4 +1,4 @@
-// Matthew Williams 7/16/2015, modified 7/21/2015
+// Matthew Williams 7/16/2015, modified 7/22/2015
 
 /*
 This is what I have so far. I have tried to explain why I did what I did. Feel free to make changes and suggest new things.
@@ -11,8 +11,6 @@ This is what I have so far. I have tried to explain why I did what I did. Feel f
 #include <vector>
 using namespace std;
 
-// this will handle logon checks. I am not sure how we want to implement this, 
-// maybe a text document (temporarily?) that handles the employees and perhaps position. 
 class Login
 {
       private:
@@ -20,13 +18,20 @@ class Login
               string password;
 			  vector<string> nameList;
 			  vector<string> passwordList;
+			  vector<char> rankList;
       public:
 		Login();
+		~Login();
         string getEmployee();
-        string getPassword();
+		bool searchUser(string, string);
         void setEmployee(string);
         void setPassword(string);
+		void setRank(char);
+		char getRank(string);
 }; // end Login
+
+// test idea: class Employee : public Login
+// then: class Manager : public Employee
 
 class Employee
 {
