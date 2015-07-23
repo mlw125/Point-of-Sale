@@ -1,0 +1,21 @@
+Order Number: 63 
+| 1 Hamburger
+| 2 Fries
+Total: 9.98 Change: 0.02
+----------------------------------------------------------
+Order Number: 89 
+| 3 Milkshake
+Total: 3.99 Change: 1.01
+----------------------------------------------------------
+Order Number: 11 
+| 1 Hamburger
+Total: 6.99 Change: 3.01
+----------------------------------------------------------
+Order Number: 67 
+| 1 Hamburger
+| 2 Fries
+| 1 Hamburger
+| 1 Hamburger
+| 1 Hamburger
+Total: 30.95 Change: 19.05
+----------------------------------------------------------

@@ -14,11 +14,11 @@ using namespace std;
 class Login
 {
       private:
-              string userName;
-              string password;
-			  vector<string> nameList;
-			  vector<string> passwordList;
-			  vector<char> rankList;
+         string userName;
+         string password;
+		 vector<string> nameList;
+		 vector<string> passwordList;
+	     vector<char> rankList;
       public:
 		Login();
 		~Login();
@@ -47,10 +47,10 @@ class Register
 {
 	private:
 		double total;
-		vector<int> currentOrderNum;
-		vector<string> currentOrderName;
 		vector<string> menuName;
 		double itemPrice(int);
+		vector<int> currentOrderNum;
+		vector<string> currentOrderName;
 	public:
 		Register();
 		~Register();
@@ -58,7 +58,9 @@ class Register
 		bool removeFromOrder(int);
 		void showOrder();
 		double getTotal();
-		void addOpenOrder(double);
+		int getOrderSize();
+		string getOrderItem(int);
+		int getItemNumber(int);
 }; // end Register
 
 // the logging class will handle the storing of the transations.
@@ -66,13 +68,22 @@ class Logging
 {
 	private:
 		int orderNumber;
-		vector<string> menuNum;
-		vector<string> menuName;
+		vector<int> orderNum;
+		vector<vector<string>> menuContents;
+		vector<double> orderTotal;
+		vector<double> orderChange;
+		vector<int> currentOrderNum;
+		vector<string> currentOrderName;
 	public:
 		Logging();
+		Logging(bool);
+		~Logging();
 		void showOpenOrders();
 		void addTransaction();
 		void viewTransactions();
+		void addOpenOrder(double, double);
+		void addOrderMenu(int, string);
+		void closeOrder(int);
 }; // end Logging
 
 

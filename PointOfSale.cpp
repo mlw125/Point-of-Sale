@@ -141,7 +141,7 @@ void Register::addToOrder(int menuNum)
 	currentOrderNum.push_back(menuNum);
 
 	// get the name for the coressponding item number and push that onto the name vector.
-	string name = menuName[menuNum];
+	string name = menuName[menuNum-1];
 	currentOrderName.push_back(name);
 } // end addToOrder()
 
@@ -168,16 +168,17 @@ bool Register::removeFromOrder(int menuNum)
 // simply displays the current order, but just the number.
 void Register::showOrder()
 {
+	cout << endl;
 	// loop through the vectors and display their data in a somewhat legible way
 	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
 	{
 		cout << endl;
-		cout << currentOrderNum[x] << " " << currentOrderName[x] << " |";
-		if ((x % 2) == 0 && x != 0)
-			cout << endl;
+		cout << currentOrderNum[x] << " " << currentOrderName[x] << "$ " << itemPrice(0) <<  " | ";
+/*		if ((x % 2) == 0 && x != 0)
+			cout << endl;*/
 	} // end for
 	cout << "\nCurrent Total: $" << total << endl;
-}
+} // end showOrder()
 
 // this function returns the total cost
 double Register::getTotal()
@@ -185,26 +186,20 @@ double Register::getTotal()
 	return total;
 } // end getTotal
 
-// adds an open order to the file Orders.txt, these will be closed in another section
-// randomly assigns a number to the order
-void Register::addOpenOrder(double change)
+// returns the size of the vectors
+int Register::getOrderSize()
 {
-	ofstream openOrder("Orders.txt");
-	srand(time(0));
+	return currentOrderName.size();
+} // end getOrderSize()
 
-	// get a random number between 1 - 99 or something
-	int randomOrderNum = rand() % 100;
-	
-	openOrder << "Order Number: " << randomOrderNum << " \n";
-	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
-	{
-		openOrder << currentOrderNum[x] << " " << currentOrderName[x] << "\n";
-	} // end for
-	openOrder << "Total: " << getTotal() << " " << "Change: " << change << "\n";
+string Register::getOrderItem(int x)
+{
+	return currentOrderName[x];
+}
 
-	openOrder.close();
-
-	cout << "Order Number: " << randomOrderNum << endl;
+int Register::getItemNumber(int x)
+{
+	return currentOrderNum[x];
 }
 
 // Menu Functions
@@ -360,4 +355,99 @@ void Menu::sortMenu()
 Logging::Logging()
 {
 
-} // end Logging constructor
+}
+
+// this contructor will be used for open orders and thus will open the Orders.txt file
+Logging::Logging(bool use)
+{
+	ifstream openOrders("Orders.txt");
+	int orderNumber = 0;
+	string menuItems1 = "", menuItems2 = "";
+	double total = 0;
+	double change = 0;
+	vector<string> menuNames;
+
+	// this helps the first, an issue I was having
+	while (openOrders.good())
+	{
+		// get the line 'Order Number: x' and put x into the order vector
+		openOrders >> menuItems1 >> menuItems2 >> orderNumber;
+		orderNum.push_back(orderNumber);
+
+		// get the character '|'
+    	openOrders >> menuItems1;
+		// a vector to hold the list of menu items
+		vector<string> menuNames;
+
+		// while the character is '|' get the menu items, will loop until menuItems == 'Total:'
+		while (menuItems1 == "|")
+		{
+			// get the whole line after '|' and put that into menuNames
+			getline(openOrders, menuItems2);
+			menuNames.push_back(menuItems2);
+			// get the next character: either '|' or 'Total:'
+			openOrders >> menuItems1;
+		} // end while
+		// push the list into the 2d vector
+		menuContents.push_back(menuNames);
+
+		// get the total and the line Change: x.xx
+		openOrders >> total >> menuItems2 >> change;
+		// push the total and the change into their vectors
+		orderTotal.push_back(total);
+		orderChange.push_back(change);
+
+		// for reading files, can likely be removed when databases implemented.
+		openOrders >> menuItems1;
+	} // end while
+	openOrders.close();
+} // end Logging copy constructor
+
+Logging::~Logging()
+{
+
+} // end Logging deconstructor
+
+// adds an open order to the file Orders.txt, these will be closed in another section
+// randomly assigns a number to the order
+void Logging::addOpenOrder(double getTotal, double change)
+{
+	ofstream openOrder("Orders.txt");
+	srand(time(0));
+
+	// this for loop will store all previously open orders before the current one
+	for (unsigned int x = 0; x < orderNum.size(); x++)
+	{
+		openOrder << "Order Number: " << orderNum[x] << " \n";
+		for (unsigned int y = 0; y < menuContents[x].size(); y++)
+		{
+			openOrder << "|" << menuContents[x][y] <<  "\n";
+		} // end for
+		openOrder << "Total: " << orderTotal[x] << " " << "Change: " << orderChange[x] << "\n";
+		// for reading files, can likely be removed when databases implemented.
+		openOrder << "----------------------------------------------------------\n";
+	}
+
+	// get a random number between 1 - 99 or something
+	int randomOrderNum = rand() % 100;
+
+	// now store the order, will be read a certain way so it has to follow this format for now
+	openOrder << "Order Number: " << randomOrderNum << " \n";
+	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
+	{
+		openOrder << "| " << currentOrderNum[x] << " " << currentOrderName[x] << "\n";
+	} // end for
+	openOrder << "Total: " << getTotal << " " << "Change: " << change << "\n";
+	// for reading files, can likely be removed when databases implemented.
+	openOrder << "----------------------------------------------------------";
+
+	openOrder.close();
+
+	cout << "Order Number: " << randomOrderNum << endl;
+} // end addOpenOrder
+
+void Logging::addOrderMenu(int orderNum, string orderName)
+{
+	currentOrderNum.push_back(orderNum);
+	currentOrderName.push_back(orderName);
+} // end addOrderMenu()

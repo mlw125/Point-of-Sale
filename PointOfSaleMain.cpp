@@ -124,7 +124,7 @@ void MainMenu(Login employee)
 	int choice = 0;
 	while (choice != 5)
 	{
-		cout << "\nWhat would you like to do?\n";
+		cout << "\n\nWhat would you like to do?\n";
 		cout << "1. Take an Order \n2. Modify the Menu \n3. Close an Open Order \n4. View Transation Hisotry \n5. Quit\n";
 		cin >> choice;
 
@@ -143,8 +143,7 @@ void MainMenu(Login employee)
 		} // end else if
 		else if (choice == 4) // view the transactions on file
 		{
-			// not completed
-			//Transactions(employee, currentMenu);
+			Transactions(employee);
 		} // end else if
 		else if (choice == 5) // sign out
 		{
@@ -205,14 +204,27 @@ void RegisterMenu(Login employee)
 		} // end else if
 		else if (choice == 5) // get the total price of the order and give the customer change and then leave to Main Menu
 		{
-			double customerMoney = 0.0;
-			cout << "\nThe amount due: $" << currentTransaction.getTotal();
-			cout << "\nAmount given: $";
-			cin >> customerMoney;
+			if (currentTransaction.getTotal() != 0.0)
+			{
+				double customerMoney = 0.0;
+				cout << "\nThe amount due: $" << currentTransaction.getTotal();
+				cout << "\nAmount given: $";
+				cin >> customerMoney;
 
-			double changeDue = (customerMoney - currentTransaction.getTotal());
-			cout << "Change Due: $" << changeDue << endl;
-			currentTransaction.addOpenOrder(changeDue);
+				double changeDue = (customerMoney - currentTransaction.getTotal());
+				cout << "Change Due: $" << changeDue << endl;
+				Logging currentOrder(true);
+
+				// to get the menu items that in the current order
+				for (int x = 0; x < currentTransaction.getOrderSize(); x++)
+				{
+					string name = currentTransaction.getOrderItem(x);
+					int num = currentTransaction.getItemNumber(x);
+					currentOrder.addOrderMenu(num, name);
+				} // end for
+				// get the total and the customer's change
+				currentOrder.addOpenOrder(currentTransaction.getTotal(), changeDue);
+			} // end if
 			choice = -1;
 		} // end else if
 		else
@@ -278,6 +290,7 @@ void FoodMenu(Login employee)
 	} // end while
 } // end FoodMenu
 
+// not implemented yet
 void OpenOrders(Login employee)
 {
 	Logging logOrder;
@@ -287,6 +300,7 @@ void OpenOrders(Login employee)
 	{
 		cout << "\nWhat would you like to do?\n";
 		cout << "1. View Open Orders \n2. Close an Order \n3. Go Back\n";
+		cin >> choice;
 
 		if (choice == 1)
 		{
