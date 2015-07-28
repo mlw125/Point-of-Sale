@@ -454,7 +454,7 @@ Logging::~Logging()
 			openOrder << "Order Number: " << orderNum[x] << " \n";
 			for (unsigned int y = 0; y < menuContents[x].size(); y++)
 			{
-				openOrder << "|" << menuContents[x][y] << "\n";
+				openOrder << "| " << menuContents[x][y] << "\n";
 			} // end for
 			openOrder << "Total: " << orderTotal[x] << " " << "Change: " << orderChange[x] << "\n";
 			// for reading files, can likely be removed when databases implemented.
@@ -474,7 +474,7 @@ Logging::~Logging()
 			transactions << " Employee: " << transEmployee[x] << "\n";
 			for (unsigned int y = 0; y < transMenu[x].size(); y++)
 			{
-				transactions << "|" << transMenu[x][y] << "\n";
+				transactions << "| " << transMenu[x][y] << "\n";
 			} // end for
 			transactions << "Total: " << transTotal[x] << " " << "Change: " << transChange[x] << "\n";
 			// for reading files, can likely be removed when databases implemented.
@@ -530,7 +530,7 @@ void Logging::showOpenOrders()
 		cout << "Order Number: " << orderNum[x] << " \n";
 		for (unsigned int y = 0; y < menuContents[x].size(); y++)
 		{
-			cout << "|" << menuContents[x][y] << "\n";
+			cout << "| " << menuContents[x][y] << "\n";
 		} // end for
 		cout << "Total: " << orderTotal[x] << " " << "Change: " << orderChange[x] << "\n";
 		// for reading files, can likely be removed when databases implemented.
