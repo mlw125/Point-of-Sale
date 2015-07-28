@@ -333,6 +333,8 @@ void OpenOrders(Login employee)
 // Transactions will handle the viewing of transactions and maybe other related things.
 void Transactions(Login currentUser)
 {
+	/*
 	Logging log;
 	log.viewTransactions();
+	*/
 } // end Transactions()
