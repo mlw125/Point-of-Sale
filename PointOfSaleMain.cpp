@@ -213,7 +213,7 @@ void RegisterMenu(Login employee)
 
 				double changeDue = (customerMoney - currentTransaction.getTotal());
 				cout << "Change Due: $" << changeDue << endl;
-				Logging currentOrder(true);
+				Logging currentOrder;
 
 				// to get the menu items that in the current order
 				for (int x = 0; x < currentTransaction.getOrderSize(); x++)
@@ -298,32 +298,41 @@ void OpenOrders(Login employee)
 	int choice = 0;
 	while (choice != 3)
 	{
+		//logOrder.readOrdersFile();
 		cout << "\nWhat would you like to do?\n";
 		cout << "1. View Open Orders \n2. Close an Order \n3. Go Back\n";
 		cin >> choice;
 
 		if (choice == 1)
 		{
-
+			logOrder.showOpenOrders();
 		} // end if
 		else if (choice == 2)
 		{
+			int orderNum = 0;
+			cout << "\nWhat order would you like to close?\n";
+			cin >> orderNum;
 
+			string employeeLog = employee.getEmployee();
+			if (logOrder.closeOrder(orderNum, employeeLog))
+				cout << "*\n\n**Successful***\n\n";
 		} // end else if
 		else if (choice == 3)
 		{
-
+			choice = 3;
 		} // end else if
 		else
 		{
-
+			cout << "\n\nWrong input, try again\n\n";
 		} // end else
+
+		//logOrder.closeOrdersFile();
 	} // end while
 } // end OpenOrders()
 
 // Transactions will handle the viewing of transactions and maybe other related things.
 void Transactions(Login currentUser)
 {
-	Menu currentMenu;
-
+	Logging log;
+	log.viewTransactions();
 } // end Transactions()

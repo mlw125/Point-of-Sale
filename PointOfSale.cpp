@@ -7,6 +7,7 @@
 #include <fstream>
 #include <ctime>
 #include <ctype.h>
+#include <sstream>
 using namespace std;
 
 // Login Functions
@@ -173,7 +174,7 @@ void Register::showOrder()
 	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
 	{
 		cout << endl;
-		cout << currentOrderNum[x] << " " << currentOrderName[x] << "$ " << itemPrice(0) <<  " | ";
+		cout << currentOrderNum[x] << " " << currentOrderName[x] << "$ " << itemPrice(x+1) <<  " | ";
 /*		if ((x % 2) == 0 && x != 0)
 			cout << endl;*/
 	} // end for
@@ -336,7 +337,7 @@ void Menu::sortMenu()
 				minIndex = y; // end if
 		// end for
 
-		// swap all the value to get to corretc position
+		// swap all the value to get to correct position
 		int tempNum = menuNumber[x];
 		menuNumber[x] = menuNumber[minIndex];
 		menuNumber[minIndex] = tempNum;
@@ -354,18 +355,12 @@ void Menu::sortMenu()
 //Logging Functions
 Logging::Logging()
 {
-
-}
-
-// this contructor will be used for open orders and thus will open the Orders.txt file
-Logging::Logging(bool use)
-{
 	ifstream openOrders("Orders.txt");
 	int orderNumber = 0;
 	string menuItems1 = "", menuItems2 = "";
 	double total = 0;
 	double change = 0;
-	vector<string> menuNames;
+	//vector<string> menuNames;
 
 	// this helps the first, an issue I was having
 	while (openOrders.good())
@@ -375,7 +370,7 @@ Logging::Logging(bool use)
 		orderNum.push_back(orderNumber);
 
 		// get the character '|'
-    	openOrders >> menuItems1;
+		openOrders >> menuItems1;
 		// a vector to hold the list of menu items
 		vector<string> menuNames;
 
@@ -388,7 +383,7 @@ Logging::Logging(bool use)
 			// get the next character: either '|' or 'Total:'
 			openOrders >> menuItems1;
 		} // end while
-		// push the list into the 2d vector
+		  // push the list into the 2d vector
 		menuContents.push_back(menuNames);
 
 		// get the total and the line Change: x.xx
@@ -401,48 +396,122 @@ Logging::Logging(bool use)
 		openOrders >> menuItems1;
 	} // end while
 	openOrders.close();
-} // end Logging copy constructor
+
+
+	ifstream transactions("Transactions.txt");
+	orderNumber = 0;
+	menuItems1 = ""; 
+	menuItems2 = "";
+	total = 0;
+	change = 0;
+
+	// this helps the first, an issue I was having
+	while (transactions.good())
+	{
+		// get the line 'Order Number: x' and put x into the order vector
+		transactions >> menuItems1 >> menuItems2 >> orderNumber;
+		transactions >> menuItems1 >> menuItems2;
+		transNum.push_back(orderNumber);
+		transEmployee.push_back(menuItems2);
+
+		// get the character '|'
+		transactions >> menuItems1;
+		// a vector to hold the list of menu items
+		vector<string> menuNames;
+
+		// while the character is '|' get the menu items, will loop until menuItems == 'Total:'
+		while (menuItems1 == "|")
+		{
+			// get the whole line after '|' and put that into menuNames
+			getline(transactions, menuItems2);
+			menuNames.push_back(menuItems2);
+			// get the next character: either '|' or 'Total:'
+			transactions >> menuItems1;
+		} // end while
+		  // push the list into the 2d vector
+		transMenu.push_back(menuNames);
+
+		// get the total and the line Change: x.xx
+		transactions >> total >> menuItems2 >> change;
+		// push the total and the change into their vectors
+		transTotal.push_back(total);
+		transChange.push_back(change);
+
+		// for reading files, can likely be removed when databases implemented.
+		transactions >> menuItems1;
+	} // end while
+	transactions.close();
+}
 
 Logging::~Logging()
 {
+	if (orderNum.size() != 0)
+	{
+		ofstream openOrder("Orders.txt");
+		// stores everything in order into the file
+		for (unsigned int x = 0; x < orderNum.size(); x++)
+		{
+			openOrder << "Order Number: " << orderNum[x] << " \n";
+			for (unsigned int y = 0; y < menuContents[x].size(); y++)
+			{
+				openOrder << "|" << menuContents[x][y] << "\n";
+			} // end for
+			openOrder << "Total: " << orderTotal[x] << " " << "Change: " << orderChange[x] << "\n";
+			// for reading files, can likely be removed when databases implemented.
+			openOrder << "----------------------------------------------------------\n";
+		}
+		openOrder.close();
+	} // end if
+/*
+	if (transNum.size() != 0)
+	{
+		ofstream transactions("Transactions.txt");
 
-} // end Logging deconstructor
+		// this for loop will store all transactions from the vectors
+		for (unsigned int x = 0; x < orderNum.size(); x++)
+		{
+			transactions << "Order Number: " << orderNum[x];
+			transactions << " Employee: " << transEmployee[x] << "\n";
+			for (unsigned int y = 0; y < transMenu[x].size(); y++)
+			{
+				transactions << "|" << transMenu[x][y] << "\n";
+			} // end for
+			transactions << "Total: " << transTotal[x] << " " << "Change: " << transChange[x] << "\n";
+			// for reading files, can likely be removed when databases implemented.
+			transactions << "----------------------------------------------------------\n";
+		} // end for
+		transactions.close();
+	} // end if
+	*/
+}
 
-// adds an open order to the file Orders.txt, these will be closed in another section
+// adds an open order
 // randomly assigns a number to the order
 void Logging::addOpenOrder(double getTotal, double change)
 {
-	ofstream openOrder("Orders.txt");
-	srand(time(0));
-
-	// this for loop will store all previously open orders before the current one
-	for (unsigned int x = 0; x < orderNum.size(); x++)
-	{
-		openOrder << "Order Number: " << orderNum[x] << " \n";
-		for (unsigned int y = 0; y < menuContents[x].size(); y++)
-		{
-			openOrder << "|" << menuContents[x][y] <<  "\n";
-		} // end for
-		openOrder << "Total: " << orderTotal[x] << " " << "Change: " << orderChange[x] << "\n";
-		// for reading files, can likely be removed when databases implemented.
-		openOrder << "----------------------------------------------------------\n";
-	}
-
 	// get a random number between 1 - 99 or something
+	srand(time(0));
 	int randomOrderNum = rand() % 100;
+	vector<string> menuItems;
 
-	// now store the order, will be read a certain way so it has to follow this format for now
-	openOrder << "Order Number: " << randomOrderNum << " \n";
+	// store the random order number
+	orderNum.push_back(randomOrderNum);
+	// get the menu item number and name and store convert them to strings, then store in vector
 	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
 	{
-		openOrder << "| " << currentOrderNum[x] << " " << currentOrderName[x] << "\n";
+		string result = "";
+		ostringstream convert;
+
+		convert << currentOrderNum[x] << " " <<	currentOrderName[x];
+		result = convert.str();
+		menuItems.push_back(result);
 	} // end for
-	openOrder << "Total: " << getTotal << " " << "Change: " << change << "\n";
-	// for reading files, can likely be removed when databases implemented.
-	openOrder << "----------------------------------------------------------";
+	menuContents.push_back(menuItems);
+	// store the total and the change
+	orderTotal.push_back(getTotal);
+	orderChange.push_back(change);
 
-	openOrder.close();
-
+	// display the order number for purposes
 	cout << "Order Number: " << randomOrderNum << endl;
 } // end addOpenOrder
 
@@ -451,3 +520,65 @@ void Logging::addOrderMenu(int orderNum, string orderName)
 	currentOrderNum.push_back(orderNum);
 	currentOrderName.push_back(orderName);
 } // end addOrderMenu()
+
+void Logging::showOpenOrders()
+{
+	cout << endl;
+	// this for loop will store all previously open orders before the current one
+	for (unsigned int x = 0; x < orderNum.size(); x++)
+	{
+		cout << "Order Number: " << orderNum[x] << " \n";
+		for (unsigned int y = 0; y < menuContents[x].size(); y++)
+		{
+			cout << "|" << menuContents[x][y] << "\n";
+		} // end for
+		cout << "Total: " << orderTotal[x] << " " << "Change: " << orderChange[x] << "\n";
+		// for reading files, can likely be removed when databases implemented.
+		cout << "----------------------------------------------------------\n";
+	} // end for
+} // end showOpenOrders
+
+bool Logging::closeOrder(int orderNumber, string employee)
+{
+	int orderIndex = findIndex(orderNumber);
+	if (orderIndex != -1)
+	{
+		addTransaction(orderIndex, employee);
+		orderNum.erase(orderNum.begin() + orderIndex);
+		menuContents.erase(menuContents.begin() + orderIndex);
+		orderTotal.erase(orderTotal.begin() + orderIndex);
+		orderChange.erase(orderChange.begin() + orderIndex);
+		return true;
+	} // end if
+	else
+	{
+		return false;
+	} // end else
+} // end closeOrder()
+
+void Logging::addTransaction(int orderIndex, string employee)
+{
+	vector<string> tempMenu;
+
+	transNum.push_back(orderNum[orderIndex]);
+	for (unsigned x = 0; x < menuContents[orderIndex].size(); x++)
+	{
+		tempMenu.push_back(menuContents[orderIndex][x]);
+	} // end for
+	transMenu.push_back(tempMenu);
+
+	transTotal.push_back(orderTotal[orderIndex]);
+	transChange.push_back(orderChange[orderIndex]);
+
+	transEmployee.push_back(employee);
+} // end addTransaction()
+
+int Logging::findIndex(int number)
+{
+	for (unsigned int x = 0; x < orderNum.size(); x++)
+	{
+		if (orderNum[x] == number)
+			return x;
+	}
+	return -1;
+} // end findIndex

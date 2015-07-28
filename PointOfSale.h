@@ -67,23 +67,30 @@ class Register
 class Logging
 {
 	private:
-		int orderNumber;
+		//int orderNumber;
 		vector<int> orderNum;
 		vector<vector<string>> menuContents;
 		vector<double> orderTotal;
 		vector<double> orderChange;
 		vector<int> currentOrderNum;
 		vector<string> currentOrderName;
+
+		vector<vector<string>> transMenu;
+		vector<int> transNum;
+		vector<double> transTotal;
+		vector<double> transChange;
+		vector<string> transEmployee;
+
 	public:
 		Logging();
-		Logging(bool);
 		~Logging();
 		void showOpenOrders();
-		void addTransaction();
+		void addTransaction(int, string);
 		void viewTransactions();
 		void addOpenOrder(double, double);
 		void addOrderMenu(int, string);
-		void closeOrder(int);
+		bool closeOrder(int, string);
+		int findIndex(int);
 }; // end Logging
 
 
