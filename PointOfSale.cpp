@@ -174,7 +174,7 @@ void Register::showOrder()
 	for (unsigned int x = 0; x < currentOrderNum.size(); x++)
 	{
 		cout << endl;
-		cout << currentOrderNum[x] << " " << currentOrderName[x] << "$ " << itemPrice(x+1) <<  " | ";
+		cout << currentOrderNum[x] << " " << currentOrderName[x] << "$ " << itemPrice(currentOrderNum[x]) <<  " | ";
 /*		if ((x % 2) == 0 && x != 0)
 			cout << endl;*/
 	} // end for
@@ -360,13 +360,14 @@ Logging::Logging()
 	string menuItems1 = "", menuItems2 = "";
 	double total = 0;
 	double change = 0;
-	//vector<string> menuNames;
 
-	// this helps the first, an issue I was having
-	while (openOrders.good())
+	// for reading 'Order:'
+	openOrders >> menuItems1;
+	// this helps read the file until it is done
+	while (!openOrders.eof())
 	{
 		// get the line 'Order Number: x' and put x into the order vector
-		openOrders >> menuItems1 >> menuItems2 >> orderNumber;
+		openOrders >> menuItems2 >> orderNumber;
 		orderNum.push_back(orderNumber);
 
 		// get the character '|'
@@ -378,12 +379,15 @@ Logging::Logging()
 		while (menuItems1 == "|")
 		{
 			// get the whole line after '|' and put that into menuNames
-			getline(openOrders, menuItems2);
+			openOrders >> menuItems2;
+			openOrders >> menuItems1;
+			menuItems2 += " ";
+			menuItems2 += menuItems1;
 			menuNames.push_back(menuItems2);
 			// get the next character: either '|' or 'Total:'
 			openOrders >> menuItems1;
 		} // end while
-		  // push the list into the 2d vector
+		// push the list into the 2d vector
 		menuContents.push_back(menuNames);
 
 		// get the total and the line Change: x.xx
@@ -392,11 +396,12 @@ Logging::Logging()
 		orderTotal.push_back(total);
 		orderChange.push_back(change);
 
-		// for reading files, can likely be removed when databases implemented.
+		// for reading '-----------------'
+		openOrders >> menuItems1;
+		// for reading 'Order:'
 		openOrders >> menuItems1;
 	} // end while
 	openOrders.close();
-
 
 	ifstream transactions("Transactions.txt");
 	orderNumber = 0;
@@ -405,11 +410,13 @@ Logging::Logging()
 	total = 0;
 	change = 0;
 
-	// this helps the first, an issue I was having
-	while (transactions.good())
+	// for reading 'Order:'
+	transactions >> menuItems1;
+	// while loop will collect all information stored in Transactions.txt
+	while (!transactions.eof())
 	{
 		// get the line 'Order Number: x' and put x into the order vector
-		transactions >> menuItems1 >> menuItems2 >> orderNumber;
+		transactions >> menuItems2 >> orderNumber;
 		transactions >> menuItems1 >> menuItems2;
 		transNum.push_back(orderNumber);
 		transEmployee.push_back(menuItems2);
@@ -437,11 +444,13 @@ Logging::Logging()
 		transTotal.push_back(total);
 		transChange.push_back(change);
 
-		// for reading files, can likely be removed when databases implemented.
+		// for reading '-----------------'
+		transactions >> menuItems1;
+		// for reading 'Order:'
 		transactions >> menuItems1;
 	} // end while
 	transactions.close();
-}
+} // end Logging contructor
 
 Logging::~Logging()
 {
@@ -459,7 +468,7 @@ Logging::~Logging()
 			openOrder << "Total: " << orderTotal[x] << " " << "Change: " << orderChange[x] << "\n";
 			// for reading files, can likely be removed when databases implemented.
 			openOrder << "----------------------------------------------------------\n";
-		}
+		} // end for
 		openOrder.close();
 	} // end if
 /*
@@ -501,7 +510,7 @@ void Logging::addOpenOrder(double getTotal, double change)
 	{
 		string result = "";
 		ostringstream convert;
-
+		// convert the numbers into strings since we don't care that they are numbers anymore 
 		convert << currentOrderNum[x] << " " <<	currentOrderName[x];
 		result = convert.str();
 		menuItems.push_back(result);
@@ -515,9 +524,9 @@ void Logging::addOpenOrder(double getTotal, double change)
 	cout << "Order Number: " << randomOrderNum << endl;
 } // end addOpenOrder
 
-void Logging::addOrderMenu(int orderNum, string orderName)
+void Logging::addOrderMenu(int orderNumber, string orderName)
 {
-	currentOrderNum.push_back(orderNum);
+	currentOrderNum.push_back(orderNumber);
 	currentOrderName.push_back(orderName);
 } // end addOrderMenu()
 
