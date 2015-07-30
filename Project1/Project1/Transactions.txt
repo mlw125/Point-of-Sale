@@ -1,0 +1,16 @@
+Order Number: 42 Employee: mlw125
+| 1 Hamburger
+| 2 Fries
+| 3 Milkshake
+Total: 13.97 Change: 6.03
+----------------------------------------------------------
+Order Number: 45 Employee: 12345
+| 1 Hamburger
+| 2 Fries
+Total: 9.98 Change: 0.02
+----------------------------------------------------------
+Order Number: 13 Employee: mlw125
+| 1 Hamburger
+| 3 Milkshake
+Total: 10.7182 Change: 4.3695
+----------------------------------------------------------
