@@ -1,4 +1,4 @@
-// Matthew Williams 7/16/2015, modified 7/22/2015
+// Matthew Williams 7/16/2015, modified 7/30/2015
 
 /*
 This is what I have so far. I have tried to explain why I did what I did. Feel free to make changes and suggest new things.
@@ -59,6 +59,7 @@ class Register
 		bool removeFromOrder(int);
 		void showOrder();
 		double getTotal();
+		void setDiscount(double);
 		int getOrderSize();
 		string getOrderItem(int);
 		int getItemNumber(int);

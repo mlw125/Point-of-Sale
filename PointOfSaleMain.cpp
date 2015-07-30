@@ -1,9 +1,10 @@
-// Matthew Williams 7/16/2015, modified 7/22/2015
+// Matthew Williams 7/16/2015, modified 7/30/2015
 
 #include "PointOfSale.h"
 #include <iostream>
 #include <string>
 #include <windows.h>
+#include <iomanip>
 using namespace std;
 
 // For handling the Main Menu of the register
@@ -130,15 +131,16 @@ void MainMenu(Login employee)
 		cout << "1. Take an Order \n2. Modify the Menu \n3. Close an Open Order \n4. View Transation Hisotry \n5. Quit\n";
 		cin >> choice;
 
+		// take an order, go to to RegisterMenu()
 		if (choice == 1) // opening an order to complete
 		{
 			RegisterMenu(employee);
 		} // end if
 		else if (choice == 2) // can modify the menu, maybe require manager access
 		{
-			// not completed
 			FoodMenu(employee);
 		} // end else if
+		// handles the viewing and closing of open orders
 		else if (choice == 3)
 		{
 			OpenOrders(employee);
@@ -200,21 +202,41 @@ void RegisterMenu(Login employee)
 		{
 			currentMenu.showMenuItems();
 		} // end else if
-		else if (choice == 4) // will be used for discounts
+		// used to get a discount, but only used on total, so can do individually or whole meal.
+		else if (choice == 4)
 		{
+			//string tempUser = employee.getEmployee();
+			//char tempRank = employee.getRank(tempUser);
+			if (employee.getRank(employee.getEmployee())/*tempRank*/ == 'M')
+			{
+				double discount = 0.0;
+				cout << "\nEnter the percentage discount: ";
+				cin >> discount;
 
+				currentTransaction.setDiscount(discount);
+			} // end if
+			else
+			{
+				cout << "\n\nYou are not high enough rank to do this.\n\n";
+			} // end else
 		} // end else if
 		else if (choice == 5) // get the total price of the order and give the customer change and then leave to Main Menu
 		{
 			if (currentTransaction.getTotal() != 0.0)
 			{
+				// get the tax for the total
+				double totalTax = currentTransaction.getTotal();
+				double tax = 0.0825;
+				double temp = currentTransaction.getTotal() * tax;
+				totalTax += temp;
+
 				double customerMoney = 0.0;
-				cout << "\nThe amount due: $" << currentTransaction.getTotal();
+				cout << "\nThe amount due: $" << fixed << setprecision(2) << totalTax;
 				cout << "\nAmount given: $";
 				cin >> customerMoney;
 
 				double changeDue = (customerMoney - currentTransaction.getTotal());
-				cout << "Change Due: $" << changeDue << endl;
+				cout << "Change Due: $" << fixed << setprecision(2) << changeDue << endl;
 				Logging currentOrder;
 				// to get the menu items that in the current order
 				for (int x = 0; x < currentTransaction.getOrderSize(); x++)
@@ -223,8 +245,9 @@ void RegisterMenu(Login employee)
 					int num = currentTransaction.getItemNumber(x);
 					currentOrder.addOrderMenu(num, name);
 				} // end for
+
 				// get the total and the customer's change
-				currentOrder.addOpenOrder(currentTransaction.getTotal(), changeDue);
+				currentOrder.addOpenOrder(totalTax, changeDue);
 			} // end if
 			choice = -1;
 		} // end else if
@@ -248,6 +271,7 @@ void FoodMenu(Login employee)
 		cout << "1. Add to the Menu \n2. Remove from the Menu \n3. Go Back\n";
 		cin >> choice;
 
+		// add something to the menu
 		if (choice == 1)
 		{
 			int menuNum = 0;
@@ -268,6 +292,7 @@ void FoodMenu(Login employee)
 			else
 				cout << "\nItem not added, try again.\n"; // end else
 		} // end if
+		// remove something from the menu
 		else if (choice == 2)
 		{
 			int menuNum = 0;
@@ -280,6 +305,7 @@ void FoodMenu(Login employee)
 			else
 				cout << "\nItem not removed, try again.\n";
 		} // end else if
+		// go back
 		else if (choice == 3)
 		{
 			
@@ -291,7 +317,7 @@ void FoodMenu(Login employee)
 	} // end while
 } // end FoodMenu
 
-// not implemented yet
+// this function will handle the viewing and closing of open orders
 void OpenOrders(Login employee)
 {
 	Logging logOrder;
@@ -303,10 +329,12 @@ void OpenOrders(Login employee)
 		cout << "1. View Open Orders \n2. Close an Order \n3. Go Back\n";
 		cin >> choice;
 
+		// if the user wants to view all open orders
 		if (choice == 1)
 		{
 			logOrder.showOpenOrders();
 		} // end if
+		// if the user wants to close an open order
 		else if (choice == 2)
 		{
 			int orderNum = 0;
@@ -315,8 +343,9 @@ void OpenOrders(Login employee)
 
 			string employeeLog = employee.getEmployee();
 			if (logOrder.closeOrder(orderNum, employeeLog))
-				cout << "*\nOrder Closed\n";
+				cout << "\nOrder Closed\n";
 		} // end else if
+		// if the user wants to go back
 		else if (choice == 3)
 		{
 			choice = 3;
@@ -331,8 +360,7 @@ void OpenOrders(Login employee)
 // Transactions will handle the viewing of transactions and maybe other related things.
 void Transactions(Login currentUser)
 {
-	/*
+	// display all transactions on file
 	Logging log;
 	log.viewTransactions();
-	*/
 } // end Transactions()

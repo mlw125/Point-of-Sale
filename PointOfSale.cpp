@@ -1,4 +1,4 @@
-// Matthew Williams 7/16/2015, modified 7/22/2015
+// Matthew Williams 7/16/2015, modified 7/30/2015
 // David Bumgarner  Modified and expanded 7/17/15
 #include "PointOfSale.h"
 #include <iostream>
@@ -8,6 +8,7 @@
 #include <ctime>
 #include <ctype.h>
 #include <sstream>
+#include <iomanip>
 using namespace std;
 
 // Login Functions
@@ -68,6 +69,7 @@ void Login::setPassword(string pass)
 // set the rank of the employee
 void Login::setRank(char position)
 {
+	// capitalize the char and push it onto the list
 	toupper(position);
 	rankList.push_back(position);
 } // end setRank()
@@ -91,11 +93,11 @@ Login::~Login()
 	string passwordData = "";
 	char rankData = ' ';
 
+	// red out the logins to the correct file
 	for (unsigned int x = 0; x < nameList.size(); x++)
 	{
 		nameData = nameList[x];
-		passwordData = passwordList[x];
-	
+		passwordData = passwordList[x];	
 		rankData = rankList[x];
 
 		LoginFile << nameData << " " << passwordData << " " << rankData << endl;
@@ -184,7 +186,7 @@ void Register::showOrder()
 /*		if ((x % 2) == 0 && x != 0)
 			cout << endl;*/
 	} // end for
-	cout << "\nCurrent Total: $" << total << endl;
+	cout << "\nCurrent Total: $" << fixed << setprecision(2) << total << endl;
 } // end showOrder()
 
 // this function returns the total cost
@@ -207,7 +209,15 @@ string Register::getOrderItem(int x)
 int Register::getItemNumber(int x)
 {
 	return currentOrderNum[x];
-}
+} // end getItemNumber
+
+void Register::setDiscount(double discount)
+{
+	discount /= 100;
+	double temp = 0.0;
+	temp = total * discount;
+	total -= temp;
+} // close setDiscount()
 
 // Menu Functions
 // the contructor will read from a file containing the menu items and store then in vectors to more easily work with
@@ -525,6 +535,7 @@ void Logging::addOpenOrder(double getTotal, double change)
 		menuItems.push_back(result);
 	} // end for
 	menuContents.push_back(menuItems);
+
 	// store the total and the change
 	orderTotal.push_back(getTotal);
 	orderChange.push_back(change);
@@ -561,7 +572,9 @@ bool Logging::closeOrder(int orderNumber, string employee)
 	int orderIndex = findIndex(orderNumber);
 	if (orderIndex != -1)
 	{
+		// add the order to the transactions list
 		addTransaction(orderIndex, employee);
+		// erase the orders from the open orders list
 		orderNum.erase(orderNum.begin() + orderIndex);
 		menuContents.erase(menuContents.begin() + orderIndex);
 		orderTotal.erase(orderTotal.begin() + orderIndex);
@@ -578,21 +591,27 @@ void Logging::addTransaction(int orderIndex, string employee)
 {
 	vector<string> tempMenu;
 
+	// add the order number to the list
 	transNum.push_back(orderNum[orderIndex]);
+	// add the order menu items to a list
 	for (unsigned x = 0; x < menuContents[orderIndex].size(); x++)
 	{
 		tempMenu.push_back(menuContents[orderIndex][x]);
 	} // end for
+	// push the list onto the vector
 	transMenu.push_back(tempMenu);
 
+	// get the total and change due
 	transTotal.push_back(orderTotal[orderIndex]);
 	transChange.push_back(orderChange[orderIndex]);
 
+	// get the employee who closed the order
 	transEmployee.push_back(employee);
 } // end addTransaction()
 
 int Logging::findIndex(int number)
 {
+	// search for the index of the order number
 	for (unsigned int x = 0; x < orderNum.size(); x++)
 	{
 		if (orderNum[x] == number)
@@ -600,3 +619,20 @@ int Logging::findIndex(int number)
 	}
 	return -1;
 } // end findIndex
+
+void Logging::viewTransactions()
+{
+	cout << endl;
+	// this for loop will show all transactions from oldest to youngest
+	for (unsigned int x = 0; x < transNum.size(); x++)
+	{
+		cout << "Order Number: " << transNum[x] << " Employee: " << transEmployee[x] << "\n";
+		for (unsigned int y = 0; y < transMenu[x].size(); y++)
+		{
+			cout << "| " << transMenu[x][y] << "\n";
+		} // end for
+		cout << "Total: " << transTotal[x] << " " << "Change: " << transChange[x] << "\n";
+		// for reading files, can likely be removed when databases implemented.
+		cout << "----------------------------------------------------------\n";
+	} // end for
+} // end viewTransactions()
