@@ -43,7 +43,12 @@ bool Login::searchUser(string name, string pass)
 	for (unsigned int x = 0; x < nameList.size(); x++)
 		// if both the username and corresponding password are found then return true
 		if (name == nameList[x] && pass == passwordList[x])
-			return true; // end if
+		{
+			userName = name;
+			password = pass;
+			rank = rankList[x];
+			return true;
+		}// end if
 	// end for
 	return false;
 } // end searchUser()
@@ -90,6 +95,7 @@ Login::~Login()
 	{
 		nameData = nameList[x];
 		passwordData = passwordList[x];
+	
 		rankData = rankList[x];
 
 		LoginFile << nameData << " " << passwordData << " " << rankData << endl;
@@ -417,6 +423,7 @@ Logging::Logging()
 	{
 		// get the line 'Order Number: x' and put x into the order vector
 		transactions >> menuItems2 >> orderNumber;
+		// get the employee username
 		transactions >> menuItems1 >> menuItems2;
 		transNum.push_back(orderNumber);
 		transEmployee.push_back(menuItems2);
@@ -430,7 +437,10 @@ Logging::Logging()
 		while (menuItems1 == "|")
 		{
 			// get the whole line after '|' and put that into menuNames
-			getline(transactions, menuItems2);
+			transactions >> menuItems2;
+			transactions >> menuItems1;
+			menuItems2 += " ";
+			menuItems2 += menuItems1;
 			menuNames.push_back(menuItems2);
 			// get the next character: either '|' or 'Total:'
 			transactions >> menuItems1;
@@ -471,15 +481,15 @@ Logging::~Logging()
 		} // end for
 		openOrder.close();
 	} // end if
-/*
+
 	if (transNum.size() != 0)
 	{
 		ofstream transactions("Transactions.txt");
 
 		// this for loop will store all transactions from the vectors
-		for (unsigned int x = 0; x < orderNum.size(); x++)
+		for (unsigned int x = 0; x < transNum.size(); x++)
 		{
-			transactions << "Order Number: " << orderNum[x];
+			transactions << "Order Number: " << transNum[x];
 			transactions << " Employee: " << transEmployee[x] << "\n";
 			for (unsigned int y = 0; y < transMenu[x].size(); y++)
 			{
@@ -491,7 +501,6 @@ Logging::~Logging()
 		} // end for
 		transactions.close();
 	} // end if
-	*/
 }
 
 // adds an open order

@@ -74,7 +74,9 @@ void LoginMenu()
 
 			// see if the employee is on the list
 			if (employee.searchUser(user, pass) == true)
+			{
 				correct = true;
+			}
 			else
 				cout << "\nEmployee not found, try again\n";
 		} // end if
@@ -104,7 +106,7 @@ void LoginMenu()
 			SetConsoleMode(hStdin, mode);
 
 			// input rank
-			cout << "Please enter an E for regular employee or a M for Manager: ";
+			cout << "\nPlease enter an E for regular employee or a M for Manager: ";
 			cin >> rank;
 
 			employee.setRank(rank);
@@ -313,7 +315,7 @@ void OpenOrders(Login employee)
 
 			string employeeLog = employee.getEmployee();
 			if (logOrder.closeOrder(orderNum, employeeLog))
-				cout << "*\n\n**Successful***\n\n";
+				cout << "*\nOrder Closed\n";
 		} // end else if
 		else if (choice == 3)
 		{

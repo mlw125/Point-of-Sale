@@ -16,6 +16,7 @@ class Login
       private:
          string userName;
          string password;
+		 char rank;
 		 vector<string> nameList;
 		 vector<string> passwordList;
 	     vector<char> rankList;
