@@ -128,7 +128,7 @@ void MainMenu(Login employee)
 	while (choice != 5)
 	{
 		cout << "\n\nWhat would you like to do?\n";
-		cout << "1. Take an Order \n2. Modify the Menu \n3. Close an Open Order \n4. View Transation Hisotry \n5. Quit\n";
+		cout << "1. Take an Order \n2. Modify the Menu \n3. Close an Open Order \n4. View Transation History \n5. Quit\n";
 		cin >> choice;
 
 		// take an order, go to to RegisterMenu()
