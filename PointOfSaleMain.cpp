@@ -1,11 +1,15 @@
-// Matthew Williams 7/16/2015, modified 7/30/2015
+// Matthew Williams 7/16/2015, modified 8/04/2015
 
-#include "PointOfSale.h"
+#include "Menu.h"
+#include "Logging.h"
+#include "Register.h"
+#include "Login.h"
 #include <iostream>
 #include <string>
 #include <windows.h>
 #include <iomanip>
 using namespace std;
+#undef max;
 
 // For handling the Main Menu of the register
 void MainMenu(Login);
@@ -30,13 +34,13 @@ int main()
 		LoginMenu();
 		cout << endl;
 	} // end while
-    
+
 	system("pause");
-    return 0;
+	return 0;
 } // end main
 
-// now checks to see if user is on the list, not requirements for username or password.
-// nor is there checking for duplicates yet.
+  // now checks to see if user is on the list, not requirements for username or password.
+  // nor is there checking for duplicates yet.
 void LoginMenu()
 {
 	int choice = 0;
@@ -53,7 +57,15 @@ void LoginMenu()
 	{
 		cout << "\nWhat would you like to do?\n";
 		cout << "1. Login \n2. Create User\n";\
-		cin >> choice;
+		//cin >> choice;
+
+		while (!(cin >> choice))
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			cout << "Please enter a number corresponding to what you would like to do: ";
+		} // end while
 
 		// if the user wants to log in
 		if (choice == 1)
@@ -81,7 +93,7 @@ void LoginMenu()
 			else
 				cout << "\nEmployee not found, try again\n";
 		} // end if
-		// if the user wants to make a new account
+		  // if the user wants to make a new account
 		else if (choice == 2)
 		{
 			string user = "";
@@ -117,19 +129,27 @@ void LoginMenu()
 			cout << "\nWrong input, try again.\n";
 		} // end else
 	} // end while
-  
+
 	MainMenu(employee);
 } // end LoginMenu
 
-// Main Menu for system
+  // Main Menu for system
 void MainMenu(Login employee)
 {
 	int choice = 0;
 	while (choice != 5)
 	{
 		cout << "\n\nWhat would you like to do?\n";
-		cout << "1. Take an Order \n2. Modify the Menu \n3. Close an Open Order \n4. View Transation Hisotry \n5. Quit\n";
-		cin >> choice;
+		cout << "1. Take an Order \n2. Modify the Menu \n3. Close an Open Order \n4. View Transaction History \n5. Quit\n";
+		//cin >> choice;
+
+		while (!(cin >> choice))
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			cout << "Please enter a number corresponding to what you would like to do: ";
+		} // end while
 
 		// take an order, go to to RegisterMenu()
 		if (choice == 1) // opening an order to complete
@@ -140,7 +160,7 @@ void MainMenu(Login employee)
 		{
 			FoodMenu(employee);
 		} // end else if
-		// handles the viewing and closing of open orders
+		  // handles the viewing and closing of open orders
 		else if (choice == 3)
 		{
 			OpenOrders(employee);
@@ -160,7 +180,7 @@ void MainMenu(Login employee)
 	} // end while
 } // end MainMenu
 
-// The RegisterMenu will handle the orders 
+  // The RegisterMenu will handle the orders 
 void RegisterMenu(Login employee)
 {
 	Register currentTransaction;
@@ -173,13 +193,29 @@ void RegisterMenu(Login employee)
 		currentTransaction.showOrder();
 		cout << "\nWhat would you like to do?\n";
 		cout << "1. Add Item to Order \n2. Remove Item From Order \n3. View Menu \n4. Add Discount \n5. Complete Order\n";
-		cin >> choice;
+		//cin >> choice;
+
+		while (!(cin >> choice))
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			cout << "Please enter a number corresponding to what you would like to do: ";
+		} // end while
 
 		if (choice == 1) // add a menu item to the order
 		{
 			int menuNum = 0;
 			cout << "\nEnter the number of the Menu item you would like to add: \n";
-			cin >> menuNum;
+			//cin >> menuNum;
+
+			while (!(cin >> menuNum))
+			{
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+				cout << "Please enter a number: ";
+			} // end while
 
 			int addSuccess = currentMenu.searchPosition(menuNum);
 			if (addSuccess == -1)
@@ -191,7 +227,15 @@ void RegisterMenu(Login employee)
 		{
 			int menuNum = 0;
 			cout << "\nEnter the number of the Menu item you would like to remove: \n";
-			cin >> menuNum;
+			//cin >> menuNum;
+
+			while (!(cin >> menuNum))
+			{
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+				cout << "Please enter a number: ";
+			} // end while
 
 			bool removeSuccess = false;
 			removeSuccess = currentTransaction.removeFromOrder(menuNum);
@@ -202,7 +246,7 @@ void RegisterMenu(Login employee)
 		{
 			currentMenu.showMenuItems();
 		} // end else if
-		// used to get a discount, but only used on total, so can do individually or whole meal.
+		  // used to get a discount, but only used on total, so can do individually or whole meal.
 		else if (choice == 4)
 		{
 			//string tempUser = employee.getEmployee();
@@ -211,7 +255,15 @@ void RegisterMenu(Login employee)
 			{
 				double discount = 0.0;
 				cout << "\nEnter the percentage discount: ";
-				cin >> discount;
+				//cin >> discount;
+
+				while (!(cin >> discount))
+				{
+					cin.clear();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+					cout << "Please enter the discount as a number: ";
+				} // end while
 
 				currentTransaction.setDiscount(discount);
 			} // end if
@@ -233,7 +285,16 @@ void RegisterMenu(Login employee)
 				double customerMoney = 0.0;
 				cout << "\nThe amount due: $" << fixed << setprecision(2) << totalTax;
 				cout << "\nAmount given: $";
-				cin >> customerMoney;
+				//cin >> customerMoney;
+
+				while (!(cin >> customerMoney))
+				{
+					cin.clear();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+					cout << "Please enter the change as a number: ";
+					cout << "\nAmount given: $";
+				} // end while
 
 				double changeDue = (customerMoney - currentTransaction.getTotal());
 				cout << "Change Due: $" << fixed << setprecision(2) << changeDue << endl;
@@ -246,7 +307,7 @@ void RegisterMenu(Login employee)
 					currentOrder.addOrderMenu(num, name);
 				} // end for
 
-				// get the total and the customer's change
+				  // get the total and the customer's change
 				currentOrder.addOpenOrder(totalTax, changeDue);
 			} // end if
 			choice = -1;
@@ -258,7 +319,7 @@ void RegisterMenu(Login employee)
 	} // end while
 } // end RegisterMenu()
 
-// The FoodMenu will handle everything to do with the modifying the menu
+  // The FoodMenu will handle everything to do with the modifying the menu
 void FoodMenu(Login employee)
 {
 	Menu currentMenu;
@@ -269,14 +330,30 @@ void FoodMenu(Login employee)
 		currentMenu.showMenuItems();
 		cout << "\nWhat would you like to do?\n";
 		cout << "1. Add to the Menu \n2. Remove from the Menu \n3. Go Back\n";
-		cin >> choice;
+		//cin >> choice;
+
+		while (!(cin >> choice))
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			cout << "Please enter a number corresponding to what you would like to do: ";
+		} // end while
 
 		// add something to the menu
 		if (choice == 1)
 		{
 			int menuNum = 0;
 			cout << "\nNumber in Menu:\n";
-			cin >> menuNum;
+			//cin >> menuNum;
+
+			while (!(cin >> menuNum))
+			{
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+				cout << "Please enter a number: ";
+			} // end while
 
 			string menuName = "";
 			cout << "\nName of item:\n";
@@ -284,7 +361,15 @@ void FoodMenu(Login employee)
 
 			double menuPrice = 0.0;
 			cout << "\nPrice of item:\n";
-			cin >> menuPrice;
+			//cin >> menuPrice;
+
+			while (!(cin >> menuPrice))
+			{
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+				cout << "Please enter a price: ";
+			} // end while
 
 			bool addSuccess = currentMenu.addMenuItems(menuNum, menuName, menuPrice);
 			if (addSuccess)
@@ -292,12 +377,20 @@ void FoodMenu(Login employee)
 			else
 				cout << "\nItem not added, try again.\n"; // end else
 		} // end if
-		// remove something from the menu
+		  // remove something from the menu
 		else if (choice == 2)
 		{
 			int menuNum = 0;
 			cout << "\nEnter the Menu Number of the item you wish to delete: \n";
-			cin >> menuNum;
+			//cin >> menuNum;
+
+			while (!(cin >> menuNum))
+			{
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+				cout << "Please enter a number: ";
+			} // end while
 
 			bool removeSuccess = currentMenu.removeMenuItems(menuNum);
 			if (removeSuccess)
@@ -305,10 +398,10 @@ void FoodMenu(Login employee)
 			else
 				cout << "\nItem not removed, try again.\n";
 		} // end else if
-		// go back
+		  // go back
 		else if (choice == 3)
 		{
-			
+
 		} // end else if
 		else
 		{
@@ -317,7 +410,7 @@ void FoodMenu(Login employee)
 	} // end while
 } // end FoodMenu
 
-// this function will handle the viewing and closing of open orders
+  // this function will handle the viewing and closing of open orders
 void OpenOrders(Login employee)
 {
 	Logging logOrder;
@@ -327,14 +420,22 @@ void OpenOrders(Login employee)
 	{
 		cout << "\nWhat would you like to do?\n";
 		cout << "1. View Open Orders \n2. Close an Order \n3. Go Back\n";
-		cin >> choice;
+		//cin >> choice;
+
+		while (!(cin >> choice))
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			cout << "Please enter a number corresponding to what you would like to do: ";
+		} // end while
 
 		// if the user wants to view all open orders
 		if (choice == 1)
 		{
 			logOrder.showOpenOrders();
 		} // end if
-		// if the user wants to close an open order
+		  // if the user wants to close an open order
 		else if (choice == 2)
 		{
 			int orderNum = 0;
@@ -345,7 +446,7 @@ void OpenOrders(Login employee)
 			if (logOrder.closeOrder(orderNum, employeeLog))
 				cout << "\nOrder Closed\n";
 		} // end else if
-		// if the user wants to go back
+		  // if the user wants to go back
 		else if (choice == 3)
 		{
 			choice = 3;
@@ -357,7 +458,7 @@ void OpenOrders(Login employee)
 	} // end while
 } // end OpenOrders()
 
-// Transactions will handle the viewing of transactions and maybe other related things.
+  // Transactions will handle the viewing of transactions and maybe other related things.
 void Transactions(Login currentUser)
 {
 	// display all transactions on file
